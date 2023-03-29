@@ -74,20 +74,17 @@ class CommentRepositoryPostgres extends CommentRepository {
     });
   }
 
-  async getCommentDetails(commentId) {
+  async verifyCommentAvailability(commentId) {
     const query = {
-      text: `SELECT comments.content, comments.date, comments.id, users.username FROM comments
-      LEFT JOIN users ON comments.owner = users.id
-      WHERE comments.id = $1 AND is_delete = false`,
+      text: 'SELECT * FROM comments WHERE id = $1',
       values: [commentId],
     };
 
     const result = await this._pool.query(query);
 
-    if (!result.rowCount) {
-      throw new NotFoundError('Komentar tidak ditemukan');
+    if (result.rows.length === 0) {
+      throw new NotFoundError('Comment tidak ditemukan');
     }
-    return result.rows[0];
   }
 }
 

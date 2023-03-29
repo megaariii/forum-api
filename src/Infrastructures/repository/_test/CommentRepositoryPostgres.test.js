@@ -7,6 +7,7 @@ const pool = require('../../database/postgres/pool');
 const CommentRepositoryPostgres = require('../CommentRepositoryPostgres');
 const AuthorizationError = require('../../../Commons/exceptions/AuthorizationError');
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
+const InvariantError = require('../../../Commons/exceptions/InvariantError');
 
 describe('CommentRepositoryPostgres', () => {
   afterEach(async () => {
@@ -158,39 +159,28 @@ describe('CommentRepositoryPostgres', () => {
     });
   });
 
-  describe('getCommentDetails function', () => {
-    it('should return Not Found Error when comment is not available', async () => {
+  describe('verifyCommentAvailability function', () => {
+    it('should throw error when using invalid commentId', async () => {
       // Arrange
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
+
       // Action and Assert
-      expect(
-        commentRepositoryPostgres.getCommentDetails(0)
-      ).rejects.toBeInstanceOf(NotFoundError);
+      await expect(
+        commentRepositoryPostgres.verifyCommentAvailability('wrong-id')
+      ).rejects.toThrowError(NotFoundError);
     });
 
-    it('should persist get comments correctly', async () => {
+    it('should not throw NotFoundError if comment available', async () => {
       // Arrange
+      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
       await UsersTableTestHelper.addUser({});
       await ThreadsTableTestHelper.addThread({});
-      const date = new Date().toISOString();
-      await CommentsTableTestHelper.addComment({ date });
+      await CommentsTableTestHelper.addComment({});
 
-      const expectedComment = {
-        id: 'comment-123',
-        content: 'Sebuah Komentar',
-        username: 'dicoding',
-        date,
-      };
-
-      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
-
-      // Action
-      const commentOnThread = await commentRepositoryPostgres.getCommentDetails(
-        'comment-123'
-      );
-
-      // Assert
-      expect(commentOnThread).toEqual(expectedComment);
+      // Action & Assert
+      await expect(
+        commentRepositoryPostgres.verifyCommentAvailability('comment-123')
+      ).resolves.not.toThrow(NotFoundError);
     });
   });
 });

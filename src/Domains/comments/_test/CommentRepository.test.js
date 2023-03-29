@@ -18,8 +18,8 @@ describe('CommentRepository interface', () => {
     expect(commentRepository.getCommentsByThreadId({})).rejects.toThrowError(
       'COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED'
     );
-    expect(commentRepository.getCommentDetails({})).rejects.toThrowError(
-      'COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED'
-    );
+    expect(
+      commentRepository.verifyCommentAvailability({})
+    ).rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   });
 });
