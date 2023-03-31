@@ -41,7 +41,7 @@ describe('GetThreadDetailsUseCase', () => {
     const mockReplyRepository = new ReplyRepository();
 
     /** mocking needed function */
-    mockThreadRepository.getThreadDetails = jest.fn().mockImplementation(() =>
+    mockThreadRepository.getThreadDetails = jest.fn(() =>
       Promise.resolve({
         id: 'thread-123',
         title: 'Title',
@@ -52,32 +52,28 @@ describe('GetThreadDetailsUseCase', () => {
       })
     );
 
-    mockCommentRepository.getCommentsByThreadId = jest
-      .fn()
-      .mockImplementation(() =>
-        Promise.resolve([
-          {
-            id: 'comment-123',
-            username: 'dicoding',
-            content: 'Content',
-            date: '01032023',
-            replies: [],
-          },
-        ])
-      );
+    mockCommentRepository.getCommentsByThreadId = jest.fn(() =>
+      Promise.resolve([
+        {
+          id: 'comment-123',
+          username: 'dicoding',
+          content: 'Content',
+          date: '01032023',
+          replies: [],
+        },
+      ])
+    );
 
-    mockReplyRepository.getRepliesByCommentId = jest
-      .fn()
-      .mockImplementation(() =>
-        Promise.resolve([
-          {
-            id: 'reply-123',
-            username: 'dicoding',
-            content: 'Content',
-            date: '01032023',
-          },
-        ])
-      );
+    mockReplyRepository.getRepliesByCommentId = jest.fn(() =>
+      Promise.resolve([
+        {
+          id: 'reply-123',
+          username: 'dicoding',
+          content: 'Content',
+          date: '01032023',
+        },
+      ])
+    );
 
     /** creating use case instance */
     const getThreadDetailsUseCase = new GetThreadDetailsUseCase({
