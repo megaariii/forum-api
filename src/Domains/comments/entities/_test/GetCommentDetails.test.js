@@ -32,6 +32,29 @@ describe('a GetCommentDetails entities', () => {
     );
   });
 
+  it('should return content value properly without change the value when isDelete false', () => {
+    // Arrange
+    const payload = {
+      id: 'comment-123',
+      username: 'dicoding',
+      content: 'Content',
+      date: '01032023',
+      isDelete: false,
+      replies: [],
+    };
+    const expected = {
+      id: payload.id,
+      username: payload.username,
+      date: payload.date,
+      replies: payload.replies,
+      content: payload.content,
+    };
+    // Action
+    const getCommentDetails = new GetCommentDetails(payload);
+    // Assert
+    expect(getCommentDetails).toEqual(expected);
+  });
+
   it('should return **komentar telah dihapus** when isDelete true', () => {
     // Arrange
     const payload = {

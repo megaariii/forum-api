@@ -12,16 +12,8 @@ class GetThreadDetails {
     this.comments = comments;
   }
 
-  _verifyPayload({ id, title, body, date, username, comments }) {
-    if (
-      !id ||
-      !title ||
-      !body ||
-      !date ||
-      !username ||
-      !comments ||
-      !comments[0]
-    ) {
+  _verifyPayload({ id, title, body, date, username }) {
+    if (!id || !title || !body || !date || !username) {
       throw new Error('THREAD_DETAILS.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
@@ -30,9 +22,7 @@ class GetThreadDetails {
       typeof title !== 'string' ||
       typeof body !== 'string' ||
       typeof date !== 'string' ||
-      typeof username !== 'string' ||
-      !(comments instanceof Array) ||
-      !(comments[0].replies instanceof Array)
+      typeof username !== 'string'
     ) {
       throw new Error('THREAD_DETAILS.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }

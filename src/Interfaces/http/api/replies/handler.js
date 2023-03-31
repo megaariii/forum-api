@@ -16,16 +16,14 @@ class ReplyHandler {
     const { id: owner } = request.auth.credentials;
     const date = new Date().toISOString();
 
-    const addReply = new AddReply({
+    const addReplyUseCase = this._container.getInstance(AddReplyUseCase.name);
+    const addedReply = await addReplyUseCase.execute({
       threadId,
       commentId,
       content,
       owner,
       date,
     });
-
-    const addReplyUseCase = this._container.getInstance(AddReplyUseCase.name);
-    const addedReply = await addReplyUseCase.execute(addReply);
 
     const response = h.response({
       status: 'success',

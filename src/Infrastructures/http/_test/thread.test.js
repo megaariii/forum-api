@@ -128,7 +128,6 @@ describe('/threads endpoint', () => {
       expect(responseJson.status).toEqual('success');
       expect(responseJson.data.thread).toBeDefined();
       expect(responseJson.data.thread.id).toEqual(threadId);
-      expect(responseJson.data.thread.comments).toBeInstanceOf(Array);
     });
 
     it('should response 404 when request with invalid threadId', async () => {

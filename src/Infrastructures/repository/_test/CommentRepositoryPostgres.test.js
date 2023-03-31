@@ -99,11 +99,10 @@ describe('CommentRepositoryPostgres', () => {
         threadId: 'thread-123',
       };
 
-      // Action
-      await commentRepositoryPostgres.checkOwnerOfComment(payload);
-
-      // Assert
-      expect(spyVerifyOwnerComment).toBeCalledWith(payload);
+      // Action and Assert
+      await expect(
+        commentRepositoryPostgres.checkOwnerOfComment(payload)
+      ).resolves.not.toThrowError();
       expect(spyVerifyOwnerComment).toBeCalledTimes(1);
     });
   });

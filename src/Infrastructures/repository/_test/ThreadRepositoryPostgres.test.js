@@ -56,6 +56,42 @@ describe('ThreadRepositoryPostgres', () => {
         threadRepositoryPostgres.getThreadDetails('wrong-id')
       ).rejects.toThrowError(NotFoundError);
     });
+
+    it('should not throw NotFoundError if thread available', async () => {
+      // Arrange
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+
+      // Action & Assert
+      await expect(
+        threadRepositoryPostgres.verifyThreadAvailability('thread-123')
+      ).resolves.not.toThrow(NotFoundError);
+    });
+
+    it('should persist get detail by threadId correctly', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      const date = new Date().toISOString();
+      await ThreadsTableTestHelper.addThread({ date });
+
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
+
+      // Action
+      const threadDetail = await threadRepositoryPostgres.getThreadDetails(
+        'thread-123'
+      );
+
+      // Assert
+      expect(threadDetail).toStrictEqual({
+        id: 'thread-123',
+        title: 'Thread',
+        body: 'Sebuah Thread',
+        owner: 'user-123',
+        date,
+        username: 'dicoding',
+      });
+    });
   });
 
   describe('verifyThreadAvailability function', () => {

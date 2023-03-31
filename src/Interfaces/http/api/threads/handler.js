@@ -14,15 +14,14 @@ class ThreadsHandler {
     const { title, body } = request.payload;
     const { id: owner } = request.auth.credentials;
     const date = new Date().toISOString();
-    const addThread = new AddThread({
+
+    const addThreadUseCase = this._container.getInstance(AddThreadUseCase.name);
+    const addedThread = await addThreadUseCase.execute({
       title,
       body,
       owner,
       date,
     });
-
-    const addThreadUseCase = this._container.getInstance(AddThreadUseCase.name);
-    const addedThread = await addThreadUseCase.execute(addThread);
 
     const response = h.response({
       status: 'success',

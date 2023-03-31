@@ -22,7 +22,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     const result = await this._pool.query(query);
 
-    return new AddedComment({ ...result.rows[0] });
+    return new AddedComment(result.rows[0]);
   }
 
   async checkOwnerOfComment({ owner, commentId, threadId }) {
@@ -64,14 +64,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     const result = await this._pool.query(query);
 
-    return result.rows.map((comment) => {
-      const getCommentDetails = new GetCommentDetails({
-        ...comment,
-        isDelete: comment.is_delete,
-        replies: [],
-      });
-      return { ...getCommentDetails };
-    });
+    return result.rows.map((comment) => new GetCommentDetails(comment));
   }
 
   async verifyCommentAvailability(commentId) {

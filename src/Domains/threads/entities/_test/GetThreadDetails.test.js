@@ -71,21 +71,6 @@ describe('a GetThreadDetails entities', () => {
     // Action
     const getThreadDetails = new GetThreadDetails(payload);
     // Assert
-    expect(getThreadDetails.id).toEqual(payload.id);
-    expect(getThreadDetails.title).toEqual(payload.title);
-    expect(getThreadDetails.body).toEqual(payload.body);
-    expect(getThreadDetails.date).toEqual(payload.date);
-    expect(getThreadDetails.username).toEqual(payload.username);
-    expect(getThreadDetails.comments[0].id).toEqual(payload.comments[0].id);
-    expect(getThreadDetails.comments[0].username).toEqual(
-      payload.comments[0].username
-    );
-    expect(getThreadDetails.comments[0].date).toEqual(payload.comments[0].date);
-    expect(getThreadDetails.comments[0].content).toEqual(
-      payload.comments[0].content
-    );
-    expect(getThreadDetails.comments[0].replies).toEqual(
-      payload.comments[0].replies
-    );
+    expect(getThreadDetails).toEqual(payload);
   });
 });
