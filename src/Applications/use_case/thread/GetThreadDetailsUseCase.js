@@ -13,12 +13,26 @@ class GetThreadDetailsUseCase {
       threadId
     );
 
+    const commentIds = comments.map((obj) => obj['id']);
+    const replies = await this._replyRepository.getRepliesByCommentId(
+      commentIds
+    );
+
     const result = [];
 
     for (const comment of comments) {
+      comment.replies = replies.filter(
+        (reply) => reply.comment_id === comment.id
+      );
+
+      const modifiedReplies = comment.replies.map((obj) => {
+        delete obj['comment_id'];
+        return obj;
+      });
+
       result.push({
         ...comment,
-        replies: await this._replyRepository.getRepliesByCommentId(comment.id),
+        replies: modifiedReplies,
       });
     }
 

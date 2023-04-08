@@ -155,11 +155,12 @@ describe('ReplyRepositoryPostgres', () => {
 
       // Action
       const repliesByCommentId =
-        await replyRepositoryPostgres.getRepliesByCommentId('comment-123');
+        await replyRepositoryPostgres.getRepliesByCommentId(['comment-123']);
 
       // Assert
       expect({ ...repliesByCommentId[0] }).toStrictEqual({
         id: 'reply-123',
+        comment_id: 'comment-123',
         content: '**balasan telah dihapus**',
         username: 'dicoding',
         date,

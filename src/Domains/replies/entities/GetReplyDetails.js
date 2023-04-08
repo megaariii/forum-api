@@ -2,9 +2,10 @@ class GetReplyDetails {
   constructor(payload) {
     this._verifyPayload(payload);
 
-    const { id, username, content, date } = payload;
+    const { id, comment_id, username, content, date } = payload;
 
     this.id = id;
+    this.comment_id = comment_id;
     this.username = username;
     this.content = content;
     this.date = date;

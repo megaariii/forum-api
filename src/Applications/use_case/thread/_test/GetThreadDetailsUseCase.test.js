@@ -22,15 +22,8 @@ describe('GetThreadDetailsUseCase', () => {
           id: 'comment-123',
           username: 'dicoding',
           date: '01032023',
-          replies: [
-            {
-              id: 'reply-123',
-              username: 'dicoding',
-              date: '01032023',
-              content: 'Content',
-            },
-          ],
           content: 'Content',
+          replies: [],
         },
       ],
     });
@@ -95,8 +88,8 @@ describe('GetThreadDetailsUseCase', () => {
     expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith(
       expectedThreadDetails.id
     );
-    expect(mockReplyRepository.getRepliesByCommentId).toBeCalledWith(
-      expectedThreadDetails.comments[0].id
-    );
+    expect(mockReplyRepository.getRepliesByCommentId).toBeCalledWith([
+      expectedThreadDetails.comments[0].id,
+    ]);
   });
 });
