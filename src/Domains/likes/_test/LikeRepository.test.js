@@ -1,0 +1,22 @@
+const LikeRepository = require('../LikeRepository');
+
+describe('LikeRepository interface', () => {
+  it('should throw error when invoke abstract behavior', async () => {
+    // Arrange
+    const likeRepository = new LikeRepository();
+
+    // Action and Assert
+    expect(likeRepository.verifyCommentHasBeenLiked({})).rejects.toThrowError(
+      'LIKE_REPOSITORY.METHOD_NOT_IMPLEMENTED'
+    );
+    expect(likeRepository.addLike({})).rejects.toThrowError(
+      'LIKE_REPOSITORY.METHOD_NOT_IMPLEMENTED'
+    );
+    expect(likeRepository.deleteLike({})).rejects.toThrowError(
+      'LIKE_REPOSITORY.METHOD_NOT_IMPLEMENTED'
+    );
+    expect(likeRepository.getLikes({})).rejects.toThrowError(
+      'LIKE_REPOSITORY.METHOD_NOT_IMPLEMENTED'
+    );
+  });
+});
