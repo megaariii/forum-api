@@ -1,10 +1,16 @@
 const GetThreadDetails = require('../../../Domains/threads/entities/GetThreadDetails');
 
 class GetThreadDetailsUseCase {
-  constructor({ threadRepository, commentRepository, replyRepository }) {
+  constructor({
+    threadRepository,
+    commentRepository,
+    replyRepository,
+    likeRepository,
+  }) {
     this._threadRepository = threadRepository;
     this._commentRepository = commentRepository;
     this._replyRepository = replyRepository;
+    this._likeRepository = likeRepository;
   }
 
   async execute(threadId) {
@@ -17,13 +23,15 @@ class GetThreadDetailsUseCase {
     const replies = await this._replyRepository.getRepliesByCommentId(
       commentIds
     );
-
+    const likes = await this._likeRepository.getLikes(commentIds);
     const result = [];
 
     for (const comment of comments) {
       comment.replies = replies.filter(
         (reply) => reply.comment_id === comment.id
       );
+
+      const likeCount = likes.filter((like) => like.comment_id === comment.id);
 
       const modifiedReplies = comment.replies.map((obj) => {
         delete obj['comment_id'];
@@ -32,6 +40,7 @@ class GetThreadDetailsUseCase {
 
       result.push({
         ...comment,
+        likeCount: likeCount.length,
         replies: modifiedReplies,
       });
     }
