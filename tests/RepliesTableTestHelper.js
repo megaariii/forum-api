@@ -8,12 +8,12 @@ const ReplyTableTestHelper = {
     commentId = 'comment-123',
     content = 'Sebuah Balasan',
     owner = 'user-123',
-    isDelete = false,
+    is_delete = false,
     date = new Date().toISOString(),
   }) {
     const query = {
       text: 'INSERT INTO replies VALUES($1, $2, $3, $4, $5, $6)',
-      values: [id, commentId, content, owner, isDelete, date],
+      values: [id, commentId, content, owner, is_delete, date],
     };
 
     await pool.query(query);
@@ -25,7 +25,7 @@ const ReplyTableTestHelper = {
       values: [id, owner],
     };
     const result = await pool.query(query);
-    return { ...result.rows[0], isDelete: result.rows[0].is_delete };
+    return { ...result.rows[0] };
   },
 
   async getRepliesByCommentId({
@@ -36,6 +36,16 @@ const ReplyTableTestHelper = {
       text: 'SELECT * FROM replies WHERE comment_id = $1 AND owner = $2',
       values: [commentId, owner],
     };
+    const result = await pool.query(query);
+    return result.rows;
+  },
+
+  async getReplyDetail(id) {
+    const query = {
+      text: 'SELECT * from replies where id = $1',
+      values: [id],
+    };
+
     const result = await pool.query(query);
     return result.rows;
   },

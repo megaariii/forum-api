@@ -23,6 +23,7 @@ class GetThreadDetailsUseCase {
     const replies = await this._replyRepository.getRepliesByCommentId(
       commentIds
     );
+
     const likes = await this._likeRepository.getLikes(commentIds);
     const result = [];
 

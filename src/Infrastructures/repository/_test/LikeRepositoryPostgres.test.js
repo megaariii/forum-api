@@ -17,39 +17,8 @@ describe('LikeRepositoryPostgres', () => {
     await pool.end();
   });
 
-  describe('Update Like function', () => {
-    it('should persist add like when comment not liked correctly', async () => {
-      // Arrange
-      await UsersTableTestHelper.addUser({});
-      await ThreadsTableTestHelper.addThread({});
-      await CommentsTableTestHelper.addComment({});
-
-      const payload = {
-        commentId: 'comment-123',
-        owner: 'user-123',
-      };
-
-      const fakeIdGenerator = () => '123';
-      const likeRepositoryPostgres = new LikeRepositoryPostgres(
-        pool,
-        fakeIdGenerator
-      );
-      const spyVerifyCommentHasBeenLiked = jest.spyOn(
-        likeRepositoryPostgres,
-        'verifyCommentHasBeenLiked'
-      );
-      const spyAddLike = jest.spyOn(likeRepositoryPostgres, 'addLike');
-
-      // Action
-      await likeRepositoryPostgres.verifyCommentHasBeenLiked(payload);
-      await likeRepositoryPostgres.addLike(payload);
-
-      // Assert
-      expect(spyVerifyCommentHasBeenLiked).toBeCalledWith(payload);
-      expect(spyAddLike).toBeCalledWith(payload);
-    });
-
-    it('should persist add like when comment has been liked correctly', async () => {
+  describe('verifyCommentHasBeenLiked function', () => {
+    it('should return 1 if liked are available', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({});
       await ThreadsTableTestHelper.addThread({});
@@ -61,24 +30,87 @@ describe('LikeRepositoryPostgres', () => {
         owner: 'user-123',
       };
 
+      const likeRepositoryPostgres = new LikeRepositoryPostgres(pool, {});
+
+      // Action
+      const isAvailable =
+        await likeRepositoryPostgres.verifyCommentHasBeenLiked(payload);
+
+      // Assert
+      expect(isAvailable).toStrictEqual(1);
+    });
+
+    it('should return -1 if liked are not available', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+      await CommentsTableTestHelper.addComment({});
+
+      const payload = {
+        commentId: 'comment-123',
+        owner: 'user-123',
+      };
+
+      const likeRepositoryPostgres = new LikeRepositoryPostgres(pool, {});
+
+      // Action
+      const isAvailable =
+        await likeRepositoryPostgres.verifyCommentHasBeenLiked(payload);
+
+      // Assert
+      expect(isAvailable).toStrictEqual(-1);
+    });
+  });
+
+  describe('addLike function', () => {
+    it('should persist add like correctly', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+      await CommentsTableTestHelper.addComment({});
+
+      const payload = {
+        commentId: 'comment-123',
+        owner: 'user-123',
+      };
+
       const fakeIdGenerator = () => '123';
       const likeRepositoryPostgres = new LikeRepositoryPostgres(
         pool,
         fakeIdGenerator
       );
-      const spyVerifyCommentHasBeenLiked = jest.spyOn(
-        likeRepositoryPostgres,
-        'verifyCommentHasBeenLiked'
-      );
-      const spyDeleteLike = jest.spyOn(likeRepositoryPostgres, 'deleteLike');
 
       // Action
-      await likeRepositoryPostgres.verifyCommentHasBeenLiked(payload);
+      await likeRepositoryPostgres.addLike(payload);
+
+      // Assert
+      const like = await LikesTableTestHelper.getLikeDetail('like-123');
+      expect(like).toHaveLength(1);
+      expect(like[0]['comment_id']).toEqual(payload.commentId);
+    });
+  });
+
+  describe('deleteLike', () => {
+    it('should delete like from database', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+      await CommentsTableTestHelper.addComment({});
+      await LikesTableTestHelper.addLike({});
+
+      const payload = {
+        commentId: 'comment-123',
+        owner: 'user-123',
+      };
+
+      const likeRepositoryPostgres = new LikeRepositoryPostgres(pool, {});
+
+      // Action
       await likeRepositoryPostgres.deleteLike(payload);
 
       // Assert
-      expect(spyVerifyCommentHasBeenLiked).toBeCalledWith(payload);
-      expect(spyDeleteLike).toBeCalledWith(payload);
+      const like = await LikesTableTestHelper.getLikeDetail('like-123');
+      expect(like).toHaveLength(0);
     });
   });
 

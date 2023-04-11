@@ -7,8 +7,8 @@ const ThreadsTableTestHelper = {
     title = 'Thread',
     body = 'Sebuah Thread',
     owner = 'user-123',
+    date = new Date().toISOString(),
   }) {
-    const date = new Date().toISOString();
     const query = {
       text: 'INSERT INTO threads VALUES($1, $2, $3, $4, $5) RETURNING id',
       values: [id, title, body, owner, date],
@@ -23,7 +23,8 @@ const ThreadsTableTestHelper = {
       values: [id],
     };
 
-    await pool.query(query);
+    const result = await pool.query(query);
+    return result.rows;
   },
 
   async cleanTable() {

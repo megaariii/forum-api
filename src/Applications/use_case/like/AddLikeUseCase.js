@@ -12,6 +12,7 @@ class AddLikeUseCase {
       commentId,
       owner,
     });
+
     if (isLiked === -1) {
       await this._likeRepository.addLike({ commentId, owner });
     } else {

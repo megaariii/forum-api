@@ -17,8 +17,8 @@ class AddCommentUseCase {
     await this._threadRepository.verifyThreadAvailability(
       useCasePayload.threadId
     );
-    const newComment = new AddComment(useCasePayload);
-    return this._commentRepository.addComment(newComment);
+
+    return this._commentRepository.addComment(useCasePayload);
   }
 }
 

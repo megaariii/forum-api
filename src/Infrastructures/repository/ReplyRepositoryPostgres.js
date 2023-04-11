@@ -63,11 +63,8 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     const result = await this._pool.query(query);
 
     return result.rows.map((reply) => {
-      const getReplyDetails = new GetReplyDetails({
-        ...reply,
-        isDelete: reply.is_delete,
-      });
-      return { ...getReplyDetails };
+      const detailReply = new GetReplyDetails(reply);
+      return { ...detailReply };
     });
   }
 }

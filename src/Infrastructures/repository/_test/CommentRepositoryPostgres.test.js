@@ -51,6 +51,32 @@ describe('CommentRepositoryPostgres', () => {
         })
       );
     });
+
+    it('should persist add comment', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+      const addComment = new AddComment({
+        threadId: 'thread-123',
+        content: 'Content',
+        owner: 'user-123',
+        date: '01032023',
+      });
+      const fakeIdGenerator = () => '123';
+      const commentRepositoryPostgres = new CommentRepositoryPostgres(
+        pool,
+        fakeIdGenerator
+      );
+
+      // Action
+      await commentRepositoryPostgres.addComment(addComment);
+
+      // Assert
+      const comment = await CommentsTableTestHelper.getCommentDetail(
+        'comment-123'
+      );
+      expect(comment).toHaveLength(1);
+    });
   });
 
   describe('checkOwnerOfComment function', () => {
@@ -128,8 +154,8 @@ describe('CommentRepositoryPostgres', () => {
       const deletedComment = await CommentsTableTestHelper.getComment(payload);
 
       // Assert
-      expect(deletedComment).toHaveProperty('isDelete');
-      expect(deletedComment.isDelete).toEqual(true);
+      expect(deletedComment).toHaveProperty('is_delete');
+      expect(deletedComment.is_delete).toEqual(true);
     });
   });
 
@@ -139,7 +165,7 @@ describe('CommentRepositoryPostgres', () => {
       await UsersTableTestHelper.addUser({});
       await ThreadsTableTestHelper.addThread({});
       const date = new Date().toISOString();
-      await CommentsTableTestHelper.addComment({ date, isDelete: true });
+      await CommentsTableTestHelper.addComment({ date, is_delete: true });
 
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
 

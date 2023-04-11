@@ -64,7 +64,10 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     const result = await this._pool.query(query);
 
-    return result.rows.map((comment) => new GetCommentDetails(comment));
+    return result.rows.map((comment) => {
+      const detailComment = new GetCommentDetails(comment);
+      return { ...detailComment };
+    });
   }
 
   async verifyCommentAvailability(commentId) {

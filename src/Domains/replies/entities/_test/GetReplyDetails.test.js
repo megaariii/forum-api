@@ -22,7 +22,7 @@ describe('a GetReplyDetails entities', () => {
       username: 'dicoding',
       date: '01032023',
       content: 123,
-      isDelete: 'false',
+      is_delete: 'false',
     };
 
     // Action and Assert
@@ -31,14 +31,14 @@ describe('a GetReplyDetails entities', () => {
     );
   });
 
-  it('should return content value properly without change the value when isDelete false', () => {
+  it('should return content value properly without change the value when is_delete false', () => {
     // Arrange
     const payload = {
       id: 'reply-123',
       username: 'dicoding',
       content: 'Content',
       date: '01032023',
-      isDelete: false,
+      is_delete: false,
     };
 
     const expected = {
@@ -53,14 +53,14 @@ describe('a GetReplyDetails entities', () => {
     expect(getReplyDetails).toEqual(expected);
   });
 
-  it('should return **balasan telah dihapus** when isDelete true', () => {
+  it('should return **balasan telah dihapus** when is_delete true', () => {
     // Arrange
     const payload = {
       id: 'reply-123',
       username: 'dicoding',
       content: 'Content',
       date: '01032023',
-      isDelete: true,
+      is_delete: true,
     };
 
     const expected = {

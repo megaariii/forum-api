@@ -44,6 +44,29 @@ describe('ThreadRepositoryPostgres', () => {
         })
       );
     });
+
+    it('should persist add thread', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      const addThread = new AddThread({
+        title: 'Title',
+        body: 'dicoding',
+        owner: 'user-123',
+        date: '01032023',
+      });
+      const fakeIdGenerator = () => '123';
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(
+        pool,
+        fakeIdGenerator
+      );
+
+      // Action
+      await threadRepositoryPostgres.addThread(addThread);
+
+      // Assert
+      const thread = await ThreadsTableTestHelper.getThreadDetail('thread-123');
+      expect(thread).toHaveLength(1);
+    });
   });
 
   describe('getDetailsThreadById function', () => {

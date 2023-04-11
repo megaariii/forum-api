@@ -22,7 +22,7 @@ describe('a GetCommentDetails entities', () => {
       username: 'dicoding',
       date: '01032023',
       content: 123,
-      isDelete: 'false',
+      is_delete: 'false',
       replies: [],
     };
 
@@ -32,14 +32,14 @@ describe('a GetCommentDetails entities', () => {
     );
   });
 
-  it('should return content value properly without change the value when isDelete false', () => {
+  it('should return content value properly without change the value when is_delete false', () => {
     // Arrange
     const payload = {
       id: 'comment-123',
       username: 'dicoding',
       content: 'Content',
       date: '01032023',
-      isDelete: false,
+      is_delete: false,
       replies: [],
     };
     const expected = {
@@ -55,14 +55,14 @@ describe('a GetCommentDetails entities', () => {
     expect(getCommentDetails).toEqual(expected);
   });
 
-  it('should return **komentar telah dihapus** when isDelete true', () => {
+  it('should return **komentar telah dihapus** when is_delete true', () => {
     // Arrange
     const payload = {
       id: 'comment-123',
       username: 'dicoding',
       content: 'Content',
       date: '01032023',
-      isDelete: true,
+      is_delete: true,
       replies: [],
     };
     const expected = {

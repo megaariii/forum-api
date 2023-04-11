@@ -24,7 +24,14 @@ describe('GetThreadDetailsUseCase', () => {
           date: '01032023',
           content: 'Content',
           likeCount: 1,
-          replies: [],
+          replies: [
+            {
+              id: 'reply-123',
+              username: 'dicoding',
+              content: 'Content',
+              date: '01032023',
+            },
+          ],
         },
       ],
     });
@@ -63,6 +70,7 @@ describe('GetThreadDetailsUseCase', () => {
       Promise.resolve([
         {
           id: 'reply-123',
+          comment_id: 'comment-123',
           username: 'dicoding',
           content: 'Content',
           date: '01032023',

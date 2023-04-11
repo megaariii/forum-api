@@ -53,6 +53,33 @@ describe('ReplyRepositoryPostgres', () => {
         })
       );
     });
+
+    it('should persist add thread', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+      await CommentsTableTestHelper.addComment({});
+      const addReply = new AddReply({
+        threadId: 'thread-123',
+        commentId: 'comment-123',
+        content: 'Content',
+        owner: 'user-123',
+        date: '01032023',
+      });
+
+      const fakeIdGenerator = () => '123';
+      const replyRepositoryPostgres = new ReplyRepositoryPostgres(
+        pool,
+        fakeIdGenerator
+      );
+
+      // Action
+      await replyRepositoryPostgres.addReply(addReply);
+
+      // Assert
+      const reply = await RepliesTableTestHelper.getReplyDetail('reply-123');
+      expect(reply).toHaveLength(1);
+    });
   });
 
   describe('checkOwnerOfReply function', () => {
@@ -137,8 +164,8 @@ describe('ReplyRepositoryPostgres', () => {
       const deletedReply = await RepliesTableTestHelper.getReply(payload);
 
       // Assert
-      expect(deletedReply).toHaveProperty('isDelete');
-      expect(deletedReply.isDelete).toEqual(true);
+      expect(deletedReply).toHaveProperty('is_delete');
+      expect(deletedReply.is_delete).toEqual(true);
     });
   });
 
@@ -149,7 +176,7 @@ describe('ReplyRepositoryPostgres', () => {
       await ThreadsTableTestHelper.addThread({});
       await CommentsTableTestHelper.addComment({});
       const date = new Date().toISOString();
-      await RepliesTableTestHelper.addReply({ date, isDelete: true });
+      await RepliesTableTestHelper.addReply({ date, is_delete: true });
 
       const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
 
